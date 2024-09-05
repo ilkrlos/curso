@@ -16,18 +16,19 @@ RUN apk update
 #    && docker-php-ext-install intl pdo pdo_mysql zip soap bcmath sockets \
 #    && pecl install xdebug \
 #    && docker-php-ext-enable --ini-name 05-opcache.ini opcache xdebug
+RUN apk add --update icu-dev
 RUN apk add --update linux-headers
-RUN apk add git acl openssl openssh-client wget zip vim \
-    && apk add libzip-dev \ 
-    && apk --update --no-cache add autoconf g++ make && \
-    pecl install -f xdebug && \
-    docker-php-ext-enable xdebug && \
-    apk del --purge autoconf g++ make &&\
-    apk del --purge autoconf linux-headers    && docker-php-ext-install intl pdo pdo_mysql zip soap bcmath sockets \ 
-    && docker-php-ext-enable --ini-name 05-opcache.ini opcache xdebug
+RUN apk add git acl openssl openssh-client wget zip vim libpng libjpeg-turbo libpng-dev 
+RUN apk add libzip-dev
+RUN apk --update --no-cache add autoconf g++ make 
+RUN pecl install -f xdebug opcache
+RUN docker-php-ext-install intl zip mysqli pdo pdo_mysql gd # soap bcmath sockets 
+RUN docker-php-ext-enable opcache xdebug pdo_mysql gd  
+RUN apk del --purge autoconf g++ make 
+RUN apk del --purge autoconf linux-headers 
 
-RUN docker-php-ext-install opcache
-RUN docker-php-ext-enable opcache
+#RUN docker-php-ext-install opcache
+#RUN docker-php-ext-enable opcache
 RUN apk cache clean && rm -rf /var/lib/apk/*
 # Install and update composer
 RUN curl https://getcomposer.org/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
