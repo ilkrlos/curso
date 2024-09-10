@@ -2,4 +2,5 @@
 .idea
 .vscode
 docker-compose.yml
+./book-6.4-1/
 ###< Other files and folders ###
